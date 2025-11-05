@@ -244,7 +244,7 @@ const applyCoupon = async () => {
 
   try {
     // REAL SERVER COMMUNICATION - Use the vulnerable endpoint
-    const response = await fetch('http://localhost:5000/api/apply-coupon-vuln', {
+    const response = await fetch('https://ssrf-race.onrender.com/api/apply-coupon-vuln', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
