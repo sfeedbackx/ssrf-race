@@ -527,14 +527,6 @@ const handleApplyCoupon = () => {
                 )}
               </div>
 
-              <div style={{ backgroundColor: '#f8fbff', padding: 12, borderRadius: 10, border: '1px solid #e6f4ff' }}>
-                <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 800, color: '#0f172a' }}>💡 Workshop Hints:</h4>
-                <ul style={{ margin: 0, paddingLeft: 16, color: '#334155', fontSize: 13 }}>
-                  <li>Try checking internal server resources</li>
-                  <li>Look for <code>localhost</code> or <code>127.0.0.1</code> endpoints</li>
-                  <li>API endpoints might contain useful data</li>
-                </ul>
-              </div>
             </aside>
           </div>
         </div>
@@ -642,10 +634,6 @@ const handleApplyCoupon = () => {
                         {isApplying ? 'Applying...' : 'Apply Coupon'}
                       </button>
                     </div>
-                    <p style={{ marginTop: 8, fontSize: 12, color: '#6b7280' }}>
-                      💡 Tip: Try RAPIDLY clicking the Apply button multiple times for the same coupon!
-                      {concurrentRequests > 0 && ` (${concurrentRequests} concurrent requests)`}
-                    </p>
                   </div>
 
                   <button onClick={completePurchase} style={{ marginTop: 12, width: '100%', backgroundColor: PALETTE.primary, color: PALETTE.white, padding: 12, borderRadius: 10, border: 'none', fontWeight: 900 }}>
@@ -653,15 +641,6 @@ const handleApplyCoupon = () => {
                   </button>
                 </div>
 
-                <div style={{ backgroundColor: '#f8fbff', padding: 12, borderRadius: 10, border: '1px solid #e6f4ff' }}>
-                  <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 900 }}>🎯 Challenge:</h4>
-                  <ul style={{ margin: 0, paddingLeft: 16, color: '#334155', fontSize: 13 }}>
-                    <li>Find hidden coupon codes using the availability checker</li>
-                    <li>Look for internal server endpoints</li>
-                    <li>Apply the unlimited-use coupon multiple times by RAPIDLY clicking</li>
-                    <li>Get your total to $0 to complete the challenge</li>
-                  </ul>
-                </div>
               </div>
             )}
           </div>
