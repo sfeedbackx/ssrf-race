@@ -11,7 +11,6 @@ import {
   Star,
   ExternalLink
 } from 'lucide-react';
-
 /**
  * VulnerableCoursePlatform_improved.jsx
  *
@@ -177,27 +176,27 @@ const VulnerableCoursePlatform = () => {
         }, null, 2);
         setSsrfResponse(`INTERNAL API RESPONSE:\n\n${response}`);
         showMessage('Discovered internal coupon API!', 'success');
-      }else if (ssrfUrl.includes('/api/availability')) {
+      } else if (ssrfUrl.includes('/api/availability')) {
         const response = JSON.stringify({
           status: 'ok',
           server: 'lab-server',
           time: new Date().toISOString(),
-        message: 'All courses are available for enrollment',
-        systemStatus: 'operational',
-        uptime: '99.9%',
-        lastChecked: new Date().toISOString(),
-        supportedEnrollment: ['individual', 'team', 'enterprise'],
-        features: [
-          'Live instructor support',
-          'Certificate of completion', 
-          'Lifetime access',
-          'Mobile app access',
-          'Community forum'
-        ]
+          message: 'All courses are available for enrollment',
+          systemStatus: 'operational',
+          uptime: '99.9%',
+          lastChecked: new Date().toISOString(),
+          supportedEnrollment: ['individual', 'team', 'enterprise'],
+          features: [
+            'Live instructor support',
+            'Certificate of completion',
+            'Lifetime access',
+            'Mobile app access',
+            'Community forum'
+          ]
         }, null, 2);
         setSsrfResponse(`AVAILABILITY API:\n\n${response}`);
         showMessage('Retrieved server availability data', 'success');
-      }else if (ssrfUrl.includes('/api/health')) {
+      } else if (ssrfUrl.includes('/api/health')) {
         const response = JSON.stringify({
           status: 'healthy',
           service: 'course-platform-api',
@@ -224,81 +223,81 @@ const VulnerableCoursePlatform = () => {
     }
   };
 
-// Replace the existing applyCoupon and handleApplyCoupon functions with these:
+  // Replace the existing applyCoupon and handleApplyCoupon functions with these:
 
-// APPLY COUPON: Vulnerable to race condition when rapidly clicking
-const applyCoupon = async () => {
-  if (!couponCode.trim()) {
-    showMessage('Please enter a coupon code', 'error');
-    return;
-  }
-
-  if (cart.length === 0) {
-    showMessage('Your cart is empty!', 'error');
-    return;
-  }
-
-  // Track concurrent requests
-  setConcurrentRequests(prev => prev + 1);
-  logAttempt(`📤 Request sent: ${couponCode} (concurrent: ${concurrentRequests + 1})`);
-
-  try {
-    // REAL SERVER COMMUNICATION - Use the vulnerable endpoint
-    const response = await fetch('https://ssrf-race.onrender.com/api/apply-coupon-vuln', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ code: couponCode }),
-    });
-
-    const result = await response.json();
-
-    if (response.ok && result.success) {
-      const newDiscount = {
-        id: Math.random().toString(36).slice(2, 9),
-        code: couponCode,
-        amount: result.discount,
-        timestamp: Date.now()
-      };
-
-      setAppliedDiscounts((prev) => {
-        const updated = [...prev, newDiscount];
-        logAttempt(`✅ Coupon applied: ${couponCode} - $${result.discount} off (Remaining: ${result.remaining})`);
-        showMessage(`Coupon applied! $${result.discount} off added`, 'success');
-        return updated;
-      });
-      
-      // Mark that coupon has been successfully applied at least once
-      setCouponApplied(true);
-    } else {
-      logAttempt(`❌ Failed: ${result.error || 'Unknown error'}`);
-      showMessage(result.error || 'Failed to apply coupon', 'error');
+  // APPLY COUPON: Vulnerable to race condition when rapidly clicking
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) {
+      showMessage('Please enter a coupon code', 'error');
+      return;
     }
-  } catch (error) {
-    logAttempt(`❌ Network error: ${error.message}`);
-    showMessage('Network error - make sure server is running on localhost:5000', 'error');
-  } finally {
-    setConcurrentRequests(prev => prev - 1);
-  }
-};
 
-// Wrapper function that creates the race condition vulnerability
-const handleApplyCoupon = () => {
-  // Allow multiple submissions only during active application process
-  if (!couponApplied) {
-    setIsApplying(true);
-    applyCoupon();
-    
-    // Add artificial delay to create vulnerability window
-    setTimeout(() => {
-      setIsApplying(false);
-    }, 800);
-  } else {
-    // Prevent resubmission after successful application
-    showMessage('Coupon already applied! Cannot apply again.', 'error');
-  }
-};
+    if (cart.length === 0) {
+      showMessage('Your cart is empty!', 'error');
+      return;
+    }
+
+    // Track concurrent requests
+    setConcurrentRequests(prev => prev + 1);
+    logAttempt(`📤 Request sent: ${couponCode} (concurrent: ${concurrentRequests + 1})`);
+
+    try {
+      // REAL SERVER COMMUNICATION - Use the vulnerable endpoint
+      const response = await fetch('/api/apply-coupon-vuln', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: couponCode }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        const newDiscount = {
+          id: Math.random().toString(36).slice(2, 9),
+          code: couponCode,
+          amount: result.discount,
+          timestamp: Date.now()
+        };
+
+        setAppliedDiscounts((prev) => {
+          const updated = [...prev, newDiscount];
+          logAttempt(`✅ Coupon applied: ${couponCode} - $${result.discount} off (Remaining: ${result.remaining})`);
+          showMessage(`Coupon applied! $${result.discount} off added`, 'success');
+          return updated;
+        });
+
+        // Mark that coupon has been successfully applied at least once
+        setCouponApplied(true);
+      } else {
+        logAttempt(`❌ Failed: ${result.error || 'Unknown error'}`);
+        showMessage(result.error || 'Failed to apply coupon', 'error');
+      }
+    } catch (error) {
+      logAttempt(`❌ Network error: ${error.message}`);
+      showMessage('Network error - make sure server is running', 'error');
+    } finally {
+      setConcurrentRequests(prev => prev - 1);
+    }
+  };
+
+  // Wrapper function that creates the race condition vulnerability
+  const handleApplyCoupon = () => {
+    // Allow multiple submissions only during active application process
+    if (!couponApplied) {
+      setIsApplying(true);
+      applyCoupon();
+
+      // Add artificial delay to create vulnerability window
+      setTimeout(() => {
+        setIsApplying(false);
+      }, 800);
+    } else {
+      // Prevent resubmission after successful application
+      showMessage('Coupon already applied! Cannot apply again.', 'error');
+    }
+  };
 
   const getTotalDiscount = () => {
     return appliedDiscounts.reduce((sum, d) => sum + (d.amount || 0), 0);
@@ -514,7 +513,7 @@ const handleApplyCoupon = () => {
                   type="text"
                   value={ssrfUrl}
                   onChange={(e) => setSsrfUrl(e.target.value)}
-                  placeholder="http://localhost:5000/api/availability"
+                  placeholder={`http://localhost:5000/api/availability`}
                   style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #e6f0ff', marginTop: 10 }}
                 />
                 <button onClick={handleSsrfRequest} style={{ marginTop: 10, width: '100%', backgroundColor: PALETTE.primary, color: PALETTE.white, padding: 10, borderRadius: 8, border: 'none', fontWeight: 800 }}>
