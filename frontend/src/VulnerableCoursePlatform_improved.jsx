@@ -22,6 +22,7 @@ import {
  * Save as: frontend/src/VulnerableCoursePlatform_improved.jsx
  */
 
+const flag = 'VITE_FLAG'
 const PALETTE = {
   primary: '#5479f7',
   secondary: '#99b9ff',
@@ -357,7 +358,7 @@ const VulnerableCoursePlatform = () => {
         <div style={{ backgroundColor: PALETTE.white, borderRadius: 18, padding: 36, maxWidth: 800, textAlign: 'center', boxShadow: '0 8px 30px rgba(0,0,0,0.12)' }}>
           <Trophy style={{ width: 96, height: 96, color: '#f6c85f', margin: '0 auto 16px' }} />
           <h1 style={{ fontSize: 40, fontWeight: 800, color: '#222' }}>🎉 Congratulations! 🎉</h1>
-          <p style={{ fontSize: 18, color: '#444', marginTop: 12 }}>You've successfully understood SSRF and Race Conditions basics!</p>
+          <p style={{ fontSize: 18, color: '#444', marginTop: 12 }}> {flag}</p>
 
           <div style={{ marginTop: 20, backgroundColor: '#f7fbff', borderRadius: 12, padding: 18, textAlign: 'left' }}>
             <p style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
