@@ -9,7 +9,7 @@ const requestWindows = new Map(); // Track request windows for race condition
 const cors = require('cors');
 app.use(cors());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Simulated internal data
 const internalCoupons = {

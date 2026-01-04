@@ -20,5 +20,8 @@ COPY nginx.conf /etc/nginx/templates/default.conf.template
 ENV BACKEND_HOST=ctf_ssrf
 ENV BACKEND_PORT=5000
 
+COPY ./envSetup.sh /docker-entrypoint.d/envSetup.sh
+RUN chmod +x /docker-entrypoint.d/envSetup.sh
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
